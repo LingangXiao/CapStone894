@@ -24,7 +24,7 @@ class RegisterForm(forms.ModelForm):
         pwd = cleaned_data.get('password')
         password_repeat = cleaned_data.get('password_repeat')
         if pwd != password_repeat:
-            raise forms.ValidationError(message='两次密码输入不一致！')
+            raise forms.ValidationError(message="Please enter the same password as the first one")
         return cleaned_data
 
     class Meta:
@@ -58,7 +58,7 @@ class CommentForm(forms.ModelForm):
         cleaned_data = super(CommentForm, self).clean()
         score = cleaned_data.get('score')
         if score == 0:
-            raise forms.ValidationError(message='评分不能为空！')
+            raise forms.ValidationError(message='Rating cannot be empty')
         else:
             return cleaned_data
 

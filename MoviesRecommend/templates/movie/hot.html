@@ -17,7 +17,7 @@
     </style>
     <!--展示电影图片用-->
     <div class="container">
-    <h3>热门电影</h3><br>
+    <h3>Popular Movie</h3><br>
         {% for movie in movies %}
             <a href="{% url 'movie:detail' movie.pk %}" class="item">
                 <div class="poster_div">

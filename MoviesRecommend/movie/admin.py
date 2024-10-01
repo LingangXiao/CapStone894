@@ -2,9 +2,9 @@ from django.contrib import admin
 
 from movie.models import User, Movie, Genre, Movie_hot, Movie_rating, Movie_similarity
 
-admin.site.site_title = "电影推荐系统后台管理系统"
-admin.site.site_header = "电影推荐系统-后台管理系统"
-admin.site.index_title = "电影推荐系统"
+admin.site.site_title = "MovieRecommendationAdministration"
+admin.site.site_header = "MovieRecommendationAdministration"
+admin.site.index_title = "MovieRecommendation"
 
 
 @admin.register(User)

@@ -4,12 +4,12 @@ from django.db.models import Avg
 
 # 分类信息表
 class Genre(models.Model):
-    name = models.CharField(max_length=100, verbose_name="类型")
+    name = models.CharField(max_length=100, verbose_name="Genre")
 
     class Meta:
         db_table = 'Genre'
-        verbose_name = '电影类型'
-        verbose_name_plural = '电影类型'
+        verbose_name = 'Genre'
+        verbose_name_plural = 'Genre'
 
     def __str__(self):
         return self.name
@@ -17,23 +17,23 @@ class Genre(models.Model):
 
 # 电影信息表
 class Movie(models.Model):
-    name = models.CharField(max_length=256, verbose_name="电影名")
+    name = models.CharField(max_length=256, verbose_name="Movie name")
     imdb_id = models.IntegerField(verbose_name="imdb_id")
-    time = models.CharField(max_length=256, blank=True, verbose_name="时长")
-    genre = models.ManyToManyField(Genre, verbose_name="类型")
-    release_time = models.CharField(max_length=256, blank=True, verbose_name="发行时间")
-    intro = models.TextField(blank=True, verbose_name="简介")
-    director = models.CharField(max_length=256, blank=True, verbose_name="导演")
-    writers = models.CharField(max_length=256, blank=True, verbose_name="编剧")
-    actors = models.CharField(max_length=512, blank=True, verbose_name="演员")
+    time = models.CharField(max_length=256, blank=True, verbose_name="Time")
+    genre = models.ManyToManyField(Genre, verbose_name="Genre")
+    release_time = models.CharField(max_length=256, blank=True, verbose_name="Release Date")
+    intro = models.TextField(blank=True, verbose_name="Intro")
+    director = models.CharField(max_length=256, blank=True, verbose_name="Director")
+    writers = models.CharField(max_length=256, blank=True, verbose_name="Writer")
+    actors = models.CharField(max_length=512, blank=True, verbose_name="Actor")
     # 电影和电影之间的相似度,A和B的相似度与B和A的相似度是一致的，所以symmetrical设置为True
     movie_similarity = models.ManyToManyField("self", through="Movie_similarity", symmetrical=False,
-                                              verbose_name="相似电影")
+                                              verbose_name="Similar movies")
 
     class Meta:
         db_table = 'Movie'
-        verbose_name = '电影信息'
-        verbose_name_plural = '电影信息'
+        verbose_name = 'Movie'
+        verbose_name_plural = 'Movie'
 
     def __str__(self):
         return self.name
@@ -75,19 +75,19 @@ class Movie(models.Model):
 class Movie_similarity(models.Model):
     movie_source = models.ForeignKey(Movie, related_name='movie_source', on_delete=models.CASCADE, verbose_name="来源电影")
     movie_target = models.ForeignKey(Movie, related_name='movie_target', on_delete=models.CASCADE, verbose_name="目标电影")
-    similarity = models.FloatField(verbose_name="相似度")
+    similarity = models.FloatField(verbose_name="Similarity")
 
     class Meta:
         # 按照相似度降序排序
-        verbose_name = '电影相似度'
-        verbose_name_plural = '电影相似度'
+        verbose_name = 'Movie Similarity'
+        verbose_name_plural = 'Movie Similarity'
 
 
 # 用户信息表
 class User(models.Model):
-    name = models.CharField(max_length=128, unique=True, verbose_name="用户名")
-    password = models.CharField(max_length=256, verbose_name="密码")
-    email = models.EmailField(unique=True, verbose_name="邮箱")
+    name = models.CharField(max_length=128, unique=True, verbose_name="User")
+    password = models.CharField(max_length=256, verbose_name="Password")
+    email = models.EmailField(unique=True, verbose_name="Email")
     rating_movies = models.ManyToManyField(Movie, through="Movie_rating")
 
     def __str__(self):
@@ -95,32 +95,32 @@ class User(models.Model):
 
     class Meta:
         db_table = 'User'
-        verbose_name = '用户信息'
-        verbose_name_plural = '用户信息'
+        verbose_name = 'User Info'
+        verbose_name_plural = 'User Info'
 
 
 # 电影评分信息表
 class Movie_rating(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, unique=False, verbose_name="用户")
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, unique=False, verbose_name="电影")
-    score = models.FloatField(verbose_name="分数")
-    comment = models.TextField(blank=True, verbose_name="评论")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, unique=False, verbose_name="User")
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, unique=False, verbose_name="Movie")
+    score = models.FloatField(verbose_name="score")
+    comment = models.TextField(blank=True, verbose_name="comment")
 
     class Meta:
         db_table = 'Movie_rating'
-        verbose_name = '电影评分信息'
-        verbose_name_plural = '电影评分信息'
+        verbose_name = 'Movie_rating'
+        verbose_name_plural = 'Movie_rating'
 
 
 # 最热门的一百部电影
 class Movie_hot(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="电影名")
-    rating_number = models.IntegerField(verbose_name="评分人数")
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="Movie")
+    rating_number = models.IntegerField(verbose_name="rating_number")
 
     class Meta:
         db_table = 'Movie_hot'
-        verbose_name = '最热电影'
-        verbose_name_plural = '最热电影'
+        verbose_name = 'Popular_Movie'
+        verbose_name_plural = 'Popular_Movie'
 
 # python manage.py makemigrations
 # python manage.py migrate

@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class MovieConfig(AppConfig):
     name = 'movie'
-    verbose_name = "电影推荐系统"
+    verbose_name = "MovieRecommendation"

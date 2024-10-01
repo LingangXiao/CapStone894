@@ -258,7 +258,7 @@ class LoginView(View):
                 return redirect(reverse('movie:index'))
 
             else:
-                messages.info(request, '用户名或者密码错误!')
+                messages.info(request, 'The user name or password is incorrect!')
                 return redirect(reverse('movie:login'))
         else:
             errors = form.get_errors()
@@ -339,10 +339,10 @@ class MovieDetailView(DetailView):
                 # 如果不存在则添加
                 rating = Movie_rating(user=user, movie=movie, score=score, comment=comment)
                 rating.save()
-            messages.info(request, "评论成功!")
+            messages.info(request, "Commented!")
         else:
             # 表单没有验证通过
-            messages.info(request, "评分不能为空!")
+            messages.info(request, "The score cannot be empty!")
         return redirect(reverse('movie:detail', args=(pk,)))
 
 
@@ -371,7 +371,7 @@ def delete_recode(request, pk):
     user = User.objects.get(pk=user_id)
     rating = Movie_rating.objects.get(user=user, movie=movie)
     rating.delete()
-    messages.info(request, f"删除 {movie.name} 评分记录成功！")
+    messages.info(request, f"delete {movie.name} 's rating successfully'！")
     # 跳转回评分历史
     return redirect(reverse('movie:history', args=(user_id,)))
 
@@ -445,7 +445,7 @@ class RecommendMovieView(ListView):
         for movie, _ in movie_lst:
             result_lst.append(movie)
         e = time.time()
-        print(f"算法推荐用时:{e - s}秒！")
+        print(f"algorithm use:{e - s}second！")
         return result_lst
 
     def get_context_data(self, *, object_list=None, **kwargs):
