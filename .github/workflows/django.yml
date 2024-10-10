@@ -29,28 +29,29 @@ jobs:
 
     - name: Debug Information
       run: |
+        echo "Current working directory:"
         pwd
-        ls -la
+        echo "Directory contents:"
+        ls -R
         echo "Python version:"
         python --version
         echo "Pip version:"
         pip --version
-
-    - name: Check manage.py
-      run: |
-        if [ -f manage.py ]; then
-          echo "manage.py exists"
-          cat manage.py
-        else
-          echo "manage.py does not exist"
-          find . -name manage.py
-        fi
+        echo "Searching for manage.py:"
+        find . -name manage.py
 
     - name: Run Tests
       run: |
-        python manage.py test
-
-    - name: Run Tests (alternative path)
-      if: failure()
-      run: |
-        find . -name manage.py -exec python {} test \;
+        if [ -f manage.py ]; then
+          python manage.py test
+        else
+          echo "manage.py not found in the current directory"
+          MANAGE_PY_PATH=$(find . -name manage.py | head -n 1)
+          if [ -n "$MANAGE_PY_PATH" ]; then
+            echo "Found manage.py at: $MANAGE_PY_PATH"
+            python $MANAGE_PY_PATH test
+          else
+            echo "manage.py not found in the project"
+            exit 1
+          fi
+        fi
