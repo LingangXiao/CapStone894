@@ -59,28 +59,27 @@ jobs:
     - name: Deploy to production
       run: |
         - name: Deploy to production
-  run: |
-    # 假设我们使用 SSH 连接到生产服务器
-    ssh user@your-server.com << EOF
-      # 进入项目目录
-      cd /path/to/your/project
-
-      # 拉取最新代码
-      git pull origin main
-
-
-      # 运行数据库迁移
-      python manage.py migrate
-
-      # 收集静态文件
-      python manage.py collectstatic --noinput
-
-
-      # 运行简单的健康检查
-      curl http://localhost:8000/health-check/
-
-      echo "Deployment completed successfully!"
-    EOF
+        # 假设我们使用 SSH 连接到生产服务器
+        ssh user@your-server.com << EOF
+          # 进入项目目录
+          cd /path/to/your/project
+    
+          # 拉取最新代码
+          git pull origin main
+    
+    
+          # 运行数据库迁移
+          python manage.py migrate
+    
+          # 收集静态文件
+          python manage.py collectstatic --noinput
+    
+    
+          # 运行简单的健康检查
+          curl http://localhost:8000/health-check/
+    
+          echo "Deployment completed successfully!"
+        EOF
 
     - name: Send notification
       if: failure()
