@@ -25,6 +25,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install django
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Debug Information
@@ -37,21 +38,17 @@ jobs:
         python --version
         echo "Pip version:"
         pip --version
-        echo "Searching for manage.py:"
-        find . -name manage.py
+        echo "Django version:"
+        python -m django --version
+        echo "Installed packages:"
+        pip list
 
     - name: Run Tests
       run: |
-        if [ -f manage.py ]; then
-          python manage.py test
-        else
-          echo "manage.py not found in the current directory"
-          MANAGE_PY_PATH=$(find . -name manage.py | head -n 1)
-          if [ -n "$MANAGE_PY_PATH" ]; then
-            echo "Found manage.py at: $MANAGE_PY_PATH"
-            python $MANAGE_PY_PATH test
-          else
-            echo "manage.py not found in the project"
-            exit 1
-          fi
-        fi
+        cd MoviesRecommend
+        python manage.py test
+
+    - name: Run Tests (alternative path)
+      if: failure()
+      run: |
+        find . -name manage.py -exec python {} test \;
