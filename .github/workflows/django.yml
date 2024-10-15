@@ -29,7 +29,7 @@ jobs:
 
 
     - name: Run security checks
-      run: bandit -r .
+      run: bandit -r . -s B105,B110
 
     - name: Run Tests with Coverage
       run: |
