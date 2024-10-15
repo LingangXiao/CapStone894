@@ -2,6 +2,7 @@ import os
 
 # 项目路径
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # 项目秘钥
 SECRET_KEY = 'bhml2023(140w8x3ktw=yzm0=@3h5wr=$$4s!g(s-^s7^@e5=kz'
