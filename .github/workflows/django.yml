@@ -25,8 +25,10 @@ jobs:
         echo "Current directory: $(pwd)"
         echo "Contents of current directory:"
         ls -la
+        echo "Contents of Movie_recommendation_system directory:"
+        ls -la Movie_recommendation_system
         echo "Contents of settings.py:"
-        cat your_project_name/settings.py
+        cat Movie_recommendation_system/settings.py
     - name: Create staticfiles directory
       run: |
         cd MoviesRecommend
