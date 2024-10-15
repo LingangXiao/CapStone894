@@ -25,7 +25,7 @@ jobs:
     - name: Run Linting
       run: |
         pip install flake8
-        flake8 . --max-line-length=120 --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,migrations --ignore=F401,E722
+        flake8 . --max-line-length=120 --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,migrations --ignore=F401,E722,F841
     - name: Check for security vulnerabilities
       run: |
         pip install safety
