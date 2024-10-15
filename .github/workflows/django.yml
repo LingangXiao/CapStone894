@@ -45,7 +45,7 @@ jobs:
         cd MoviesRecommend
         python manage.py collectstatic --noinput
     - name: Create Build Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: dist
         path: MoviesRecommend/staticfiles
