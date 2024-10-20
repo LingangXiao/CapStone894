@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from .models import Movie, Genre, User, Movie_rating, Movie_hot, Movie_similarity
+import xmlrunner
 
 
 class GenreModelTest(TestCase):
@@ -67,3 +68,11 @@ class MovieHotModelTest(TestCase):
         hot_movie = Movie_hot.objects.create(movie=self.movie, rating_number=1000)
         self.assertEqual(hot_movie.rating_number, 1000)
         self.assertEqual(hot_movie.movie.name, "Hot Movie")
+
+
+if __name__ == '__main__':
+    xmlrunner.XMLTestRunner(output='test-reports').run(unittest.TestLoader().loadTestsFromTestCase(GenreModelTest))
+    xmlrunner.XMLTestRunner(output='test-reports').run(unittest.TestLoader().loadTestsFromTestCase(MovieModelTest))
+    xmlrunner.XMLTestRunner(output='test-reports').run(unittest.TestLoader().loadTestsFromTestCase(UserModelTest))
+    xmlrunner.XMLTestRunner(output='test-reports').run(unittest.TestLoader().loadTestsFromTestCase(MovieRatingModelTest))
+    xmlrunner.XMLTestRunner(output='test-reports').run(unittest.TestLoader().loadTestsFromTestCase(MovieHotModelTest))
