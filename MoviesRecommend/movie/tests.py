@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from .models import Movie, Genre, User, Movie_rating, Movie_hot, Movie_similarity
 import xmlrunner
+import unittest
 
 
 class GenreModelTest(TestCase):
@@ -71,8 +72,14 @@ class MovieHotModelTest(TestCase):
 
 
 if __name__ == '__main__':
-    xmlrunner.XMLTestRunner(output='test-reports').run(unittest.TestLoader().loadTestsFromTestCase(GenreModelTest))
-    xmlrunner.XMLTestRunner(output='test-reports').run(unittest.TestLoader().loadTestsFromTestCase(MovieModelTest))
-    xmlrunner.XMLTestRunner(output='test-reports').run(unittest.TestLoader().loadTestsFromTestCase(UserModelTest))
-    xmlrunner.XMLTestRunner(output='test-reports').run(unittest.TestLoader().loadTestsFromTestCase(MovieRatingModelTest))
-    xmlrunner.XMLTestRunner(output='test-reports').run(unittest.TestLoader().loadTestsFromTestCase(MovieHotModelTest))
+    test_classes = [
+        GenreModelTest,
+        MovieModelTest,
+        UserModelTest,
+        MovieRatingModelTest,
+        MovieHotModelTest
+    ]
+    
+    for test_class in test_classes:
+        suite = unittest.TestLoader().loadTestsFromTestCase(test_class)
+        xmlrunner.XMLTestRunner(output='test-reports').run(suite)
