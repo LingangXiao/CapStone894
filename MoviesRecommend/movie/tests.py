@@ -71,15 +71,3 @@ class MovieHotModelTest(TestCase):
         self.assertEqual(hot_movie.movie.name, "Hot Movie")
 
 
-if __name__ == '__main__':
-    test_classes = [
-        GenreModelTest,
-        MovieModelTest,
-        UserModelTest,
-        MovieRatingModelTest,
-        MovieHotModelTest
-    ]
-    
-    for test_class in test_classes:
-        suite = unittest.TestLoader().loadTestsFromTestCase(test_class)
-        xmlrunner.XMLTestRunner(output='test-reports').run(suite)
