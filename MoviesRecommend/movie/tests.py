@@ -69,5 +69,3 @@ class MovieHotModelTest(TestCase):
         hot_movie = Movie_hot.objects.create(movie=self.movie, rating_number=1000)
         self.assertEqual(hot_movie.rating_number, 1000)
         self.assertEqual(hot_movie.movie.name, "Hot Movie")
-
-
