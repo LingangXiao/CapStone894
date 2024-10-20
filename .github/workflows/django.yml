@@ -25,6 +25,13 @@ jobs:
         ls -la MoviesRecommend || echo "MoviesRecommend directory not found"
         echo "Searching for requirements.txt:"
         find . -name requirements.txt
+    - name: Create requirements.txt
+      run: |
+        echo "Django==3.2.10" > requirements.txt
+        echo "pymysql==1.0.2" >> requirements.txt
+        echo "mysqlclient==2.1.0" >> requirements.txt
+        echo "coverage==6.5.0" >> requirements.txt
+        echo "unittest-xml-reporting==3.2.0" >> requirements.txt
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
