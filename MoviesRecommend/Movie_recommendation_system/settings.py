@@ -60,16 +60,30 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Movie_recommendation_system.wsgi.application'
 
 # 数据库配置
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db_movie_recommend',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': 'localhost',
-        'PORT': '3306'
+is_github_actions = os.environ.get('GITHUB_ACTIONS') == 'true'
+
+if is_github_actions:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'github_actions_db',
+            'USER': 'root',
+            'PASSWORD': 'root',
+            'HOST': '127.0.0.1',
+            'PORT': '3306',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'db_movie_recommend',
+            'USER': 'root',
+            'PASSWORD': '123456',
+            'HOST': 'localhost',
+            'PORT': '3306'
+        }
+    }
 
 # 密码验证
 AUTH_PASSWORD_VALIDATORS = [
