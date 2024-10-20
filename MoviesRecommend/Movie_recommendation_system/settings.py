@@ -60,20 +60,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Movie_recommendation_system.wsgi.application'
 
 # 数据库配置
-is_github_actions = os.environ.get('GITHUB_ACTIONS') == 'true'
-
-if is_github_actions:
+if os.environ.get('GITHUB_ACTIONS') == 'true':
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'github_actions_db',
-            'USER': 'root',
-            'PASSWORD': 'root',
-            'HOST': '127.0.0.1',
-            'PORT': '3306',
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
         }
     }
 else:
+    # 您现有的 MySQL 配置
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
