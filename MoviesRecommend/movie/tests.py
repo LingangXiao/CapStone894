@@ -2,10 +2,12 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from .models import Movie, Genre, User, Movie_rating, Movie_hot, Movie_similarity
 
+
 class GenreModelTest(TestCase):
     def test_genre_creation(self):
         genre = Genre.objects.create(name="Action")
         self.assertEqual(str(genre), "Action")
+
 
 class MovieModelTest(TestCase):
     def setUp(self):
@@ -39,10 +41,12 @@ class MovieModelTest(TestCase):
         Movie_similarity.objects.create(movie_source=self.movie, movie_target=similar_movie, similarity=0.9)
         self.assertEqual(list(self.movie.get_similarity(k=1)), [similar_movie])
 
+
 class UserModelTest(TestCase):
     def test_user_creation(self):
         user = User.objects.create(name="testuser", password="testpass", email="test@example.com")
         self.assertEqual(str(user), "<USER:( name: testuser,password: testpass,email: test@example.com )>")
+
 
 class MovieRatingModelTest(TestCase):
     def setUp(self):
@@ -53,6 +57,7 @@ class MovieRatingModelTest(TestCase):
         rating = Movie_rating.objects.create(user=self.user, movie=self.movie, score=4.5, comment="Great movie!")
         self.assertEqual(rating.score, 4.5)
         self.assertEqual(rating.comment, "Great movie!")
+
 
 class MovieHotModelTest(TestCase):
     def setUp(self):
