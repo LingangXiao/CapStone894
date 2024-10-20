@@ -15,10 +15,25 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: 3.7
+    - name: Debug - List directory contents
+      run: |
+        echo "Current directory:"
+        pwd
+        echo "Contents of current directory:"
+        ls -R
+        echo "Contents of MoviesRecommend directory (if it exists):"
+        ls -R MoviesRecommend || echo "MoviesRecommend directory not found"
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r MoviesRecommend/requirements.txt
+        if [ -f MoviesRecommend/requirements.txt ]; then
+          pip install -r MoviesRecommend/requirements.txt
+        elif [ -f requirements.txt ]; then
+          pip install -r requirements.txt
+        else
+          echo "requirements.txt not found in expected locations"
+          exit 1
+        fi
         pip install coverage==6.5.0 unittest-xml-reporting==3.2.0
     - name: Run tests with coverage
       run: |
@@ -49,7 +64,14 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r MoviesRecommend/requirements.txt
+        if [ -f MoviesRecommend/requirements.txt ]; then
+          pip install -r MoviesRecommend/requirements.txt
+        elif [ -f requirements.txt ]; then
+          pip install -r requirements.txt
+        else
+          echo "requirements.txt not found in expected locations"
+          exit 1
+        fi
     - name: Run migrations
       run: |
         cd MoviesRecommend
