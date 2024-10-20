@@ -1,3 +1,30 @@
+# Core dependencies
 Django==3.2.10
 pymysql==1.0.2
 mysqlclient==2.1.0
+
+# Testing and coverage
+coverage==7.3.2
+unittest-xml-reporting==3.2.0
+
+# Additional useful Django packages
+djangorestframework==3.14.0
+django-filter==23.3
+django-crispy-forms==2.0
+django-allauth==0.58.2
+
+# Database adapters (in case you need them)
+psycopg2-binary==2.9.9
+
+# Development tools
+django-debug-toolbar==4.2.0
+
+# Security
+django-cors-headers==4.3.0
+
+# Utilities
+Pillow==10.1.0  # for image processing
+requests==2.31.0  # for making HTTP requests
+
+# WSGI server for production
+gunicorn==21.2.0
