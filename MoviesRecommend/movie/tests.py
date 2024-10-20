@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
-from .models import Genre, Movie, User, Movie_rating, Movie_hot
+from .models import Movie, Genre, User, Movie_rating, Movie_hot, Movie_similarity
 
 class GenreModelTest(TestCase):
     def test_genre_creation(self):
