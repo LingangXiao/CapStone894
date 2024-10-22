@@ -19,7 +19,6 @@ def run_tests_with_coverage():
             '*/__init__.py',
         ]
     )
-    
     cov.start()
     test_runner = xmlrunner.XMLTestRunner(output='test-reports')
     test_program = unittest.main(module=None, exit=False, testRunner=test_runner)
