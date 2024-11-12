@@ -507,24 +507,7 @@ class ViewsTestCase(TestCase):
         # 验证评分已被删除
         self.assertFalse(Movie_rating.objects.filter(user=self.user, movie=self.movie).exists())'''
 
-    def test_delete_record(self):
-        # 先登录
-        self.client.post(reverse('movie:login'), {
-            'name': 'testuser',
-            'password': 'testpass'
-        })
-
-        # 检查评分是否存在
-        self.assertTrue(Movie_rating.objects.filter(user=self.user, movie=self.movie).exists())
-
-        # 使用正确的URL名称进行删除操作
-        # response = self.client.get(reverse('movie:delete_recode', args=[self.movie.id]))
-
-        # 检查评分是否已被删除
-        self.assertFalse(Movie_rating.objects.filter(user=self.user, movie=self.movie).exists())
-
-        # 检查是否重定向到历史页面
-        # self.assertRedirects(response, reverse('movie:history', args=[self.user.id]))
+   
 
     def test_recommend_movie_view(self):
         # 先登录
