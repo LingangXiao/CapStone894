@@ -21,7 +21,7 @@ def run_tests_with_coverage():
             '*/admin.py',
             '*/apps.py',
             '*/__init__.py',
-            '*/views.py',  # 暂时忽略views.py
+            '*/views.py',  # Temporarily ignore views.py
         ]
     )
     cov.start()
@@ -32,99 +32,6 @@ def run_tests_with_coverage():
     cov.html_report(directory='coverage_reports')
     print("\nCoverage Report:")
     cov.report()
-
-
-class GenreModelTest(TestCase):
-    def test_genre_creation(self):
-        genre = Genre.objects.create(name="Action")
-        self.assertEqual(str(genre), "Action")
-
-
-class MovieModelTest(TestCase):
-    def setUp(self):
-        self.genre = Genre.objects.create(name="Drama")
-        self.movie = Movie.objects.create(
-            name="Test Movie",
-            imdb_id=12345,
-            time="120 min",
-            release_time="2023-01-01",
-            intro="A test movie",
-            director="Test Director",
-            writers="Test Writer",
-            actors="Test Actor"
-        )
-        self.movie.genre.add(self.genre)
-        self.user = User.objects.create(
-            name="testuser",
-            password="testpass",
-            email="test@example.com"
-        )
-
-    def test_movie_creation(self):
-        self.assertEqual(str(self.movie), "Test Movie")
-
-    def test_get_score(self):
-        Movie_rating.objects.create(user=self.user, movie=self.movie, score=4.5)
-        Movie_rating.objects.create(user=self.user, movie=self.movie, score=3.5)
-        self.assertEqual(self.movie.get_score(), 4.0)
-
-    def test_get_genre(self):
-        self.assertEqual(self.movie.get_genre(), ["Drama"])
-
-    def test_get_similarity(self):
-        similar_movie = Movie.objects.create(name="Similar Movie", imdb_id=67890)
-        Movie_similarity.objects.create(
-            movie_source=self.movie,
-            movie_target=similar_movie,
-            similarity=0.9
-        )
-        self.assertEqual(list(self.movie.get_similarity(k=1)), [similar_movie])
-
-
-class UserModelTest(TestCase):
-    def test_user_creation(self):
-        user = User.objects.create(
-            name="testuser",
-            password="testpass",
-            email="test@example.com"
-        )
-        self.assertEqual(
-            str(user),
-            "<USER:( name: testuser,password: testpass,email: test@example.com )>"
-        )
-
-
-class MovieRatingModelTest(TestCase):
-    def setUp(self):
-        self.user = User.objects.create(
-            name="testuser",
-            password="testpass",
-            email="test@example.com"
-        )
-        self.movie = Movie.objects.create(name="Test Movie", imdb_id=12345)
-
-    def test_movie_rating_creation(self):
-        rating = Movie_rating.objects.create(
-            user=self.user,
-            movie=self.movie,
-            score=4.5,
-            comment="Great movie!"
-        )
-        self.assertEqual(rating.score, 4.5)
-        self.assertEqual(rating.comment, "Great movie!")
-
-
-class MovieHotModelTest(TestCase):
-    def setUp(self):
-        self.movie = Movie.objects.create(name="Hot Movie", imdb_id=12345)
-
-    def test_movie_hot_creation(self):
-        hot_movie = Movie_hot.objects.create(
-            movie=self.movie,
-            rating_number=1000
-        )
-        self.assertEqual(hot_movie.rating_number, 1000)
-        self.assertEqual(hot_movie.movie.name, "Hot Movie")
 
 
 class GenreModelTest(TestCase):
@@ -279,17 +186,17 @@ class MovieHotTest(TestCase):
 
 class ViewsTestCase(TestCase):
     def setUp(self):
-        # 创建测试客户端
+        # Create test client
         self.client = Client()
 
-        # 创建测试用户
+        # Create test user
         self.user = User.objects.create(
             name="testuser",
             password="testpass",
             email="test@test.com"
         )
 
-        # 创建测试电影数据
+        # Create test movie data
         self.genre = Genre.objects.create(name="Action")
         self.movie = Movie.objects.create(
             name="Test Movie",
@@ -301,14 +208,13 @@ class ViewsTestCase(TestCase):
         )
         self.movie.genre.add(self.genre)
 
-        # 创建测试评分
+        # Create test rating
         self.rating = Movie_rating.objects.create(
             user=self.user,
             movie=self.movie,
             score=4.5,
             comment="Great movie!"
         )
-        pass
 
     def test_index_view(self):
         response = self.client.get(reverse('movie:index'))
@@ -318,7 +224,7 @@ class ViewsTestCase(TestCase):
         self.assertIn('paginator', response.context)
 
     def test_popular_movie_view(self):
-        # 创建热门电影数据
+        # Create hot movie data
         Movie_hot.objects.create(
             movie=self.movie,
             rating_number=1000
@@ -329,11 +235,11 @@ class ViewsTestCase(TestCase):
         self.assertIn('movies', response.context)
 
     def test_tag_view(self):
-        # 测试无分类参数
+        # Test without genre parameter
         response = self.client.get(reverse('movie:tag'))
         self.assertEqual(response.status_code, 200)
 
-        # 测试有分类参数
+        # Test with genre parameter
         response = self.client.get(f"{reverse('movie:tag')}?genre=Action")
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'movie/tag.html')
@@ -346,50 +252,25 @@ class ViewsTestCase(TestCase):
         self.assertIn('movies', response.context)
         self.assertIn('keyword', response.context)
 
-    '''def test_register_view(self):
-        # 测试GET请求
-        response = self.client.get(reverse('movie:register'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'movie/register.html')
-
-        # 测试POST请求 - 有效数据
-        valid_data = {
-            'name': 'newuser',
-            'password': 'newpass',
-            'email': 'new@test.com'
-        }
-        response = self.client.post(reverse('movie:register'), valid_data)
-        self.assertRedirects(response, reverse('movie:index'))
-
-        # 测试POST请求 - 无效数据（重复用户名）
-        invalid_data = {
-            'name': 'testuser',  # 已存在的用户名
-            'password': 'testpass',
-            'email': 'another@test.com'
-        }
-        response = self.client.post(reverse('movie:register'), invalid_data)
-        self.assertRedirects(response, reverse('movie:register')) '''
-
     def test_register_view(self):
-        # 测试GET请求
+        # Test GET request
         response = self.client.get(reverse('movie:register'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'movie/register.html')
 
-        # 测试POST请求 - 有效数据
+        # Test POST request - valid data
         valid_data = {
             'name': 'newuser',
             'password': 'newpass',
-            'password_repeat': 'newpass',  # 添加确认密码字段
+            'password_repeat': 'newpass',
             'email': 'new@test.com'
         }
         response = self.client.post(reverse('movie:register'), valid_data)
-        # 检查是否创建了用户，而不是检查重定向
         self.assertTrue(User.objects.filter(name='newuser').exists())
 
-        # 测试POST请求 - 无效数据（重复用户名）
+        # Test POST request - invalid data (duplicate username)
         invalid_data = {
-            'name': 'testuser',  # 已存在的用户名
+            'name': 'testuser',
             'password': 'testpass',
             'password_repeat': 'testpass',
             'email': 'another@test.com'
@@ -399,46 +280,21 @@ class ViewsTestCase(TestCase):
         self.assertTrue(any('already exists' in str(m) for m in messages))
 
     def test_login_view(self):
-        # 测试GET请求
+        # Test GET request
         response = self.client.get(reverse('movie:login'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'movie/login.html')
 
-        # 测试POST请求 - 有效登录
+        # Test POST request - valid login
         valid_data = {
             'name': 'testuser',
             'password': 'testpass',
             'remember': True
         }
         response = self.client.post(reverse('movie:login'), valid_data, follow=True)
-        self.assertEqual(response.status_code, 200)  # 检查最终页面是否成功加载
-
-        # 测试POST请求 - 无效登录
-        invalid_data = {
-            'name': 'testuser',
-            'password': 'wrongpass',
-            'remember': False
-        }
-        response = self.client.post(reverse('movie:login'), invalid_data)
-        messages = list(get_messages(response.wsgi_request))
-        #self.assertIn('The user name or password is incorrect!', str(messages[0]))
-
-    '''def test_login_view(self):
-        # 测试GET请求
-        response = self.client.get(reverse('movie:login'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'movie/login.html')
 
-        # 测试POST请求 - 有效登录
-        valid_data = {
-            'name': 'testuser',
-            'password': 'testpass',
-            'remember': True
-        }
-        response = self.client.post(reverse('movie:login'), valid_data)
-        self.assertRedirects(response, reverse('movie:index'))
-
-        # 测试POST请求 - 无效登录
+        # Test POST request - invalid login
         invalid_data = {
             'name': 'testuser',
             'password': 'wrongpass',
@@ -446,27 +302,25 @@ class ViewsTestCase(TestCase):
         }
         response = self.client.post(reverse('movie:login'), invalid_data)
         messages = list(get_messages(response.wsgi_request))
-        self.assertRedirects(response, reverse('movie:login'))
-        self.assertIn('The user name or password is incorrect!', str(messages[0]))'''
 
     def test_logout_view(self):
-        # 先登录
+        # Login first
         self.client.post(reverse('movie:login'), {
             'name': 'testuser',
             'password': 'testpass'
         })
-        # 测试登出
+        # Test logout
         response = self.client.get(reverse('movie:logout'))
         self.assertRedirects(response, reverse('movie:index'))
 
     def test_movie_detail_view(self):
-        # 测试未登录状态
+        # Test without login
         response = self.client.get(reverse('movie:detail', args=[self.movie.id]))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'movie/detail.html')
         self.assertFalse(response.context['login'])
 
-        # 测试登录状态
+        # Test with login
         self.client.post(reverse('movie:login'), {
             'name': 'testuser',
             'password': 'testpass'
@@ -475,7 +329,7 @@ class ViewsTestCase(TestCase):
         self.assertTrue(response.context['login'])
         self.assertEqual(response.context['score'], 4.5)
 
-        # 测试评分提交
+        # Test rating submission
         rating_data = {
             'score': 4.0,
             'comment': 'Updated comment'
@@ -486,7 +340,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(updated_rating.score, 4.0)
 
     def test_rating_history_view(self):
-        # 先登录
+        # Login first
         self.client.post(reverse('movie:login'), {
             'name': 'testuser',
             'password': 'testpass'
@@ -496,27 +350,14 @@ class ViewsTestCase(TestCase):
         self.assertTemplateUsed(response, 'movie/history.html')
         self.assertIn('ratings', response.context)
 
-    '''def test_delete_record(self):
-        # 先登录
-        self.client.post(reverse('movie:login'), {
-            'name': 'testuser',
-            'password': 'testpass'
-        })
-        response = self.client.get(reverse('movie:delete', args=[self.movie.id]))
-        self.assertRedirects(response, reverse('movie:history', args=[self.user.id]))
-        # 验证评分已被删除
-        self.assertFalse(Movie_rating.objects.filter(user=self.user, movie=self.movie).exists())'''
-
-   
-
     def test_recommend_movie_view(self):
-        # 先登录
+        # Login first
         self.client.post(reverse('movie:login'), {
             'name': 'testuser',
             'password': 'testpass'
         })
 
-        # 创建一些测试数据用于推荐
+        # Create test data for recommendations
         other_user = User.objects.create(name="other", password="pass", email="other@test.com")
         other_movie = Movie.objects.create(name="Other Movie", imdb_id=456)
         Movie_rating.objects.create(user=other_user, movie=self.movie, score=4.0)
@@ -528,7 +369,7 @@ class ViewsTestCase(TestCase):
         self.assertIn('movies', response.context)
 
     def test_pagination_data(self):
-        # 创建足够多的电影以测试分页
+        # Create enough movies to test pagination
         for i in range(20):
             Movie.objects.create(
                 name=f"Movie {i}",
